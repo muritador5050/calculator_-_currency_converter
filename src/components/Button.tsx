@@ -1,7 +1,16 @@
 import React from 'react';
-
-const Button = () => {
-  return <div>Button</div>;
+import '../App.css';
+type ButtonProps = {
+  children: React.ReactNode;
+  style?: React.CSSProperties;
+  onClick?: () => void;
+};
+const Button = ({ children, onClick, style }: ButtonProps) => {
+  return (
+    <button style={style} onClick={onClick}>
+      {children}
+    </button>
+  );
 };
 
 export default Button;
