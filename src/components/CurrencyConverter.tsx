@@ -66,7 +66,7 @@ function CurrencyConverter() {
   useEffect(() => {
     const fetchRates = async () => {
       try {
-        const rates = await fetchExchangeRates(fromCurrency);
+        const rates = await fetchExchangeRates();
         dispatch({ type: 'SET_EXCHANGE_RATES', payload: rates });
         setCurrencies(Object.keys(rates));
       } catch (err) {
@@ -78,10 +78,26 @@ function CurrencyConverter() {
       }
     };
     fetchRates();
-  }, [fromCurrency]);
+  }, []);
+
   const handleConvert = () => {
+    console.log('Exchange Rates: ', exchangeRates);
+    if (!amount) {
+      dispatch({ type: 'SET_ERROR', payload: 'Please enter an amount.' });
+      return;
+    }
+
+    if (isNaN(parseFloat(amount))) {
+      dispatch({ type: 'SET_ERROR', payload: 'Invalid amount.' });
+      return;
+    }
+
     if (exchangeRates && amount) {
+      console.log('To Currency: ', toCurrency);
+      console.log('Amount: ', amount);
       const rate = exchangeRates[toCurrency];
+      console.log('Rate: ', rate);
+
       if (rate) {
         const result = (parseFloat(amount) * rate).toFixed(2);
         dispatch({ type: 'SET_CONVERTED_AMOUNT', payload: result });

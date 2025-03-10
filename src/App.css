@@ -36,6 +36,7 @@ button {
 .converter-box {
   height: 200px;
   border: 2px solid greenyellow;
+  font-size: 2rem;
   background-color: rgba(0, 0, 0, 0.75);
 }
 .calculator-box {
@@ -44,6 +45,7 @@ button {
   align-items: flex-end;
   justify-content: flex-end;
 }
+
 section {
   display: flex;
 }
