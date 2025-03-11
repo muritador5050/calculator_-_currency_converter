@@ -1,6 +1,6 @@
 // src/utils/api.ts
 export async function fetchExchangeRates(): Promise<{ [key: string]: number }> {
-  const apiKey = process.env.REACT_APP_API_KEY;
+  const apiKey = 'cur_live_s6VNvcqYp21OJtxKrUUzShPtFJXFZ0AWxKdameLy';
   const currencies = 'EUR,USD,CAD,GBP,JPY,AUD,NGN';
 
   const url = `https://api.currencyapi.com/v3/latest?apikey=${apiKey}&currencies=${currencies}`;
