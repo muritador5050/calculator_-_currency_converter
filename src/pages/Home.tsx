@@ -32,18 +32,18 @@ function Home() {
       <span className='active-name'>{activeName}</span>
       <nav>
         <button
-          style={buttonStyle('Converter')}
-          onClick={() => handleActive('Converter')}
-          className='switch-btn con-btn'
-        >
-          Converter
-        </button>
-        <button
           style={buttonStyle('Calculator')}
           onClick={() => handleActive('Calculator')}
           className='switch-btn cal-btn'
         >
           Calculator
+        </button>
+        <button
+          style={buttonStyle('Converter')}
+          onClick={() => handleActive('Converter')}
+          className='switch-btn con-btn'
+        >
+          Converter
         </button>
       </nav>
       <main>{componentToRender}</main>

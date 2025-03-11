@@ -1,5 +1,6 @@
 import React, { useReducer } from 'react';
 import Button from './Button';
+import { type ACTIONTYPE, OperationProps } from '../utils/api';
 import '../App.css';
 
 //Color
@@ -10,25 +11,14 @@ const equalSign = {
   backgroundColor: 'transparent',
   border: 'none',
 };
-type OperationProps = {
-  currentOperand: string;
-  previousOperand: string;
-  operation: string | null;
-};
+
 let initialValue: OperationProps = {
   currentOperand: '',
   previousOperand: '',
   operation: '',
 };
-type ACTIONTYPE =
-  | { type: 'add-digit'; payload: string }
-  | { type: 'choose-operation'; payload: string }
-  | { type: 'clear' }
-  | { type: 'delete-digit' }
-  | { type: 'evaluate' }
-  | { type: 'percentage' };
 
-function reducer(state: OperationProps, action: ACTIONTYPE): OperationProps {
+function reducer(state: OperationProps, action: ACTIONTYPE) {
   switch (action.type) {
     case 'add-digit':
       if (action.payload === '0' && state.currentOperand === '0') return state;
@@ -99,7 +89,7 @@ function evaluate({
   currentOperand,
   previousOperand,
   operation,
-}: OperationProps): string {
+}: OperationProps) {
   const prev = parseFloat(previousOperand);
   const current = parseFloat(currentOperand);
   if (isNaN(prev) || isNaN(current)) return '';

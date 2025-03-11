@@ -2,26 +2,12 @@ import React, { useEffect, useReducer, useState } from 'react';
 import Button from './Button';
 import '../App.css';
 import { colorstyle } from './Calculator';
-import { fetchExchangeRates } from '../utils/api';
-type CurrencyState = {
-  fromCurrency: string;
-  toCurrency: string;
-  amount: string;
-  convertedAmount: string;
-  exchangeRates: { [key: string]: number } | null;
-  error: string | null;
-};
+import {
+  fetchExchangeRates,
+  type CurrencyState,
+  type CurrencyAction,
+} from '../utils/api';
 
-type CurrencyAction =
-  | { type: 'SET_FROM_CURRENCY'; payload: string }
-  | { type: 'SET_TO_CURRENCY'; payload: string }
-  | { type: 'SET_AMOUNT'; payload: string }
-  | { type: 'SET_CONVERTED_AMOUNT'; payload: string }
-  | { type: 'SET_EXCHANGE_RATES'; payload: { [key: string]: number } }
-  | { type: 'SET_ERROR'; payload: string }
-  | { type: 'CLEAR' }
-  | { type: 'DELETE' }
-  | { type: 'REFRESH' };
 const initialState: CurrencyState = {
   fromCurrency: 'USD',
   toCurrency: 'EUR',
@@ -30,10 +16,7 @@ const initialState: CurrencyState = {
   exchangeRates: null,
   error: null,
 };
-function currencyReducer(
-  state: CurrencyState,
-  action: CurrencyAction
-): CurrencyState {
+function currencyReducer(state: CurrencyState, action: CurrencyAction) {
   switch (action.type) {
     case 'SET_FROM_CURRENCY':
       return { ...state, fromCurrency: action.payload };
@@ -127,6 +110,7 @@ function CurrencyConverter() {
     };
     handleConvert();
   }, [amount, fromCurrency, toCurrency, exchangeRates, dispatch]);
+
   const handleDigitClick = (digit: string) => {
     dispatch({
       type: 'SET_AMOUNT',

@@ -33,3 +33,37 @@ export async function fetchExchangeRates(): Promise<{ [key: string]: number }> {
     }
   }
 }
+
+export type OperationProps = {
+  currentOperand: string;
+  previousOperand: string;
+  operation: string | null;
+};
+
+export type ACTIONTYPE =
+  | { type: 'add-digit'; payload: string }
+  | { type: 'choose-operation'; payload: string }
+  | { type: 'clear' }
+  | { type: 'delete-digit' }
+  | { type: 'evaluate' }
+  | { type: 'percentage' };
+
+export type CurrencyState = {
+  fromCurrency: string;
+  toCurrency: string;
+  amount: string;
+  convertedAmount: string;
+  exchangeRates: { [key: string]: number } | null;
+  error: string | null;
+};
+
+export type CurrencyAction =
+  | { type: 'SET_FROM_CURRENCY'; payload: string }
+  | { type: 'SET_TO_CURRENCY'; payload: string }
+  | { type: 'SET_AMOUNT'; payload: string }
+  | { type: 'SET_CONVERTED_AMOUNT'; payload: string }
+  | { type: 'SET_EXCHANGE_RATES'; payload: { [key: string]: number } }
+  | { type: 'SET_ERROR'; payload: string }
+  | { type: 'CLEAR' }
+  | { type: 'DELETE' }
+  | { type: 'REFRESH' };
