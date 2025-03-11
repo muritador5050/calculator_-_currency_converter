@@ -171,9 +171,9 @@ function CurrencyConverter() {
         </div>
         <section className='converted-amount'>
           {convertedAmount && (
-            <p>
+            <>
               {convertedAmount} {toCurrency}
-            </p>
+            </>
           )}
           {error && <p className='error'>{error}</p>}
         </section>

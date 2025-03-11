@@ -5,8 +5,6 @@ body {
   min-height: 100dvh;
   background-color: black;
   color: white;
-  /* border: 5px solid red; */
-  border-radius: 20px;
   padding: 0 0.5em;
   overflow: hidden;
 }
@@ -93,9 +91,11 @@ button {
 .converter-box {
   display: flex;
   flex-direction: column;
-  height: 300px;
+  min-height: fit-content;
+  gap: 10px;
   color: white;
 }
+
 .calculator-box {
   display: flex;
   flex-direction: column;
@@ -130,5 +130,6 @@ select option {
   .container {
     width: 300px;
     min-height: fit-content;
+    border-radius: 20px;
   }
 }
