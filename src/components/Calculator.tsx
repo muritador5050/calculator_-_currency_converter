@@ -164,7 +164,7 @@ function Calculator() {
             style={colorstyle}
             onClick={() => dispatch({ type: 'delete-digit' })}
           >
-            <span> &#x2B8C;</span>
+            <span>&#11148;</span>
           </Button>
 
           <Button onClick={() => dispatch({ type: 'add-digit', payload: '7' })}>
