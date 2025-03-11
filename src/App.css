@@ -1,13 +1,13 @@
 body {
-  background-color: rgba(0, 0, 0, 0.938);
+  background-color: rgba(0, 0, 0, 0.85);
 }
 .container {
   min-height: fit-content;
   background-color: black;
   color: white;
-  border: 5px solid red;
+  /* border: 5px solid red; */
   border-radius: 20px;
-  padding: 0 0.5em;
+  /* padding: 0 0.5em; */
   overflow: hidden;
 }
 nav {
@@ -128,6 +128,6 @@ select option {
     align-items: center;
   }
   .container {
-    width: 400px;
+    width: 300px;
   }
 }
