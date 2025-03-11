@@ -2,12 +2,12 @@ body {
   background-color: rgba(0, 0, 0, 0.85);
 }
 .container {
-  min-height: fit-content;
+  min-height: 100dvh;
   background-color: black;
   color: white;
   /* border: 5px solid red; */
   border-radius: 20px;
-  /* padding: 0 0.5em; */
+  padding: 0 0.5em;
   overflow: hidden;
 }
 nav {
@@ -129,5 +129,6 @@ select option {
   }
   .container {
     width: 300px;
+    min-height: fit-content;
   }
 }
