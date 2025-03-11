@@ -6,6 +6,10 @@ import '../App.css';
 export const colorstyle = {
   color: 'green',
 };
+const equalSign = {
+  backgroundColor: 'transparent',
+  border: 'none',
+};
 type OperationProps = {
   currentOperand: string;
   previousOperand: string;
@@ -136,31 +140,12 @@ function Calculator() {
           </div>
           <div className='current-operand'>{currentOperand}</div>
         </div>
-        <section className='cal-operation-grid'>
-          <Button onClick={() => dispatch({ type: 'clear' })}>C</Button>
-          <Button onClick={() => dispatch({ type: 'percentage' })}>%</Button>
-          <span className='span-two'>
-            <Button onClick={() => dispatch({ type: 'delete-digit' })}>
-              <span> &#x2B8C;</span>
-            </Button>
-          </span>
+        <div className='cal-grid'>
           <Button
-            onClick={() => dispatch({ type: 'choose-operation', payload: '+' })}
             style={colorstyle}
+            onClick={() => dispatch({ type: 'clear' })}
           >
-            <span className='entity'>&#43;</span>
-          </Button>
-          <Button
-            onClick={() => dispatch({ type: 'choose-operation', payload: '-' })}
-            style={colorstyle}
-          >
-            <span className='entity'>&minus;</span>
-          </Button>
-          <Button
-            onClick={() => dispatch({ type: 'choose-operation', payload: '*' })}
-            style={colorstyle}
-          >
-            <span className='entity'>&#215;</span>
+            C
           </Button>
           <Button
             onClick={() => dispatch({ type: 'choose-operation', payload: '/' })}
@@ -168,8 +153,20 @@ function Calculator() {
           >
             <span className='entity'>&divide;</span>
           </Button>
-        </section>
-        <section className='cal-number-grid'>
+          <Button
+            onClick={() => dispatch({ type: 'choose-operation', payload: '*' })}
+            style={colorstyle} //multi
+          >
+            <span className='entity'>&#215;</span>
+          </Button>
+
+          <Button
+            style={colorstyle}
+            onClick={() => dispatch({ type: 'delete-digit' })}
+          >
+            <span> &#x2B8C;</span>
+          </Button>
+
           <Button onClick={() => dispatch({ type: 'add-digit', payload: '7' })}>
             7
           </Button>
@@ -178,6 +175,12 @@ function Calculator() {
           </Button>
           <Button onClick={() => dispatch({ type: 'add-digit', payload: '9' })}>
             9
+          </Button>
+          <Button
+            onClick={() => dispatch({ type: 'choose-operation', payload: '-' })}
+            style={colorstyle} //minus
+          >
+            <span className='entity'>&minus;</span>
           </Button>
 
           <Button onClick={() => dispatch({ type: 'add-digit', payload: '4' })}>
@@ -189,7 +192,12 @@ function Calculator() {
           <Button onClick={() => dispatch({ type: 'add-digit', payload: '6' })}>
             6
           </Button>
-
+          <Button
+            onClick={() => dispatch({ type: 'choose-operation', payload: '+' })}
+            style={colorstyle} //plus
+          >
+            <span className='entity'>&#43;</span>
+          </Button>
           <Button onClick={() => dispatch({ type: 'add-digit', payload: '1' })}>
             1
           </Button>
@@ -199,20 +207,22 @@ function Calculator() {
           <Button onClick={() => dispatch({ type: 'add-digit', payload: '3' })}>
             3
           </Button>
-
+          <span className='equal-sign'>
+            <Button
+              onClick={() => dispatch({ type: 'evaluate' })}
+              style={equalSign}
+            >
+              =
+            </Button>
+          </span>
+          <Button onClick={() => dispatch({ type: 'percentage' })}>%</Button>
           <Button onClick={() => dispatch({ type: 'add-digit', payload: '0' })}>
             0
           </Button>
           <Button onClick={() => dispatch({ type: 'add-digit', payload: '.' })}>
             .
           </Button>
-          <Button
-            onClick={() => dispatch({ type: 'evaluate' })}
-            style={colorstyle}
-          >
-            =
-          </Button>
-        </section>
+        </div>
       </div>
     </>
   );

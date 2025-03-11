@@ -1,12 +1,14 @@
 body {
-  /* background-color: rgba(0, 0, 0, 0.938); */
-  /* display: flex;
-  justify-content: center;
-  align-items: center; */
+  background-color: rgba(0, 0, 0, 0.938);
 }
 .container {
-  /* width: 80%; */
-  padding: 0.5em;
+  min-height: fit-content;
+  background-color: black;
+  color: white;
+  border: 5px solid red;
+  border-radius: 20px;
+  padding: 0 0.5em;
+  overflow: hidden;
 }
 nav {
   display: flex;
@@ -42,71 +44,81 @@ button {
 .entity {
   font-size: 2.5rem;
 }
+.rdt-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.rdt-btn:hover {
+  border-bottom: 1px solid gray;
+  background-color: rgba(255, 255, 255, 0.2);
+}
+.rdt-btn:active {
+  opacity: 0.3;
+}
+.converter {
+  border-radius: 50px;
+  border: 5px solid black;
+}
+
+.clear-and-refresh {
+  display: grid;
+  grid-template-columns: auto auto;
+}
 .converter-grid {
   display: grid;
   grid-template-columns: auto auto auto;
 }
 
-.converter-grid .span-two {
-  grid-column: span 2;
-}
-
-.cal-operation-grid {
+.cal-grid {
   display: grid;
-  grid-template-columns: auto auto auto auto;
-}
-.cal-operation-grid .span-two {
-  grid-column: span 2;
-}
-.cal-number-grid {
-  display: grid;
-  grid-template-columns: auto auto auto;
-}
-.amount-input {
-  height: 100px;
-  margin: 0.5em 0;
-  /* padding: 0.2em; */
-  overflow: hidden;
-  /* background-color: red; */
-}
-.amount-input input {
-  height: inherit;
-  width: 100%;
-  outline: none;
-  border: none;
+  grid-template-columns: auto auto auto 50px;
   font-size: 2rem;
-  background-color: transparent;
+}
+.equal-sign {
+  grid-row: span 2;
+  background-color: green;
+  border-radius: 10px;
+  align-content: center;
 }
 .calculator,
 .converter {
-  border: 5px solid purple;
-  /* padding: 1em 0.5em; */
-  border-radius: 20px;
   min-height: 500px;
 }
 .calculator-box,
 .converter-box {
   height: 200px;
   font-size: 2rem;
-  background-color: rgba(0, 0, 0, 0.75);
 }
 .converter-box {
   display: flex;
   flex-direction: column;
   height: 300px;
+  color: white;
 }
 .calculator-box {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   justify-content: flex-end;
+  font-size: 2.5rem;
+  word-wrap: break-word;
+  overflow: hidden;
+  word-break: break-all;
+}
+.select-section {
+  display: flex;
+  flex-direction: column;
 }
 select {
-  height: 60px;
-  /* border-radius: 10px; */
+  height: 65px;
   background-color: inherit;
+  border: none;
   color: white;
   padding: 10px;
+}
+select option {
+  color: black;
 }
 
 @media (min-width: 600px) {

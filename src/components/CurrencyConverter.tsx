@@ -20,7 +20,8 @@ type CurrencyAction =
   | { type: 'SET_EXCHANGE_RATES'; payload: { [key: string]: number } }
   | { type: 'SET_ERROR'; payload: string }
   | { type: 'CLEAR' }
-  | { type: 'DELETE' };
+  | { type: 'DELETE' }
+  | { type: 'REFRESH' };
 const initialState: CurrencyState = {
   fromCurrency: 'USD',
   toCurrency: 'EUR',
@@ -50,12 +51,26 @@ function currencyReducer(
       if (state.amount === '') return state;
       return { ...state, amount: state.amount.slice(0, -1) };
     case 'CLEAR':
-      return { ...state, amount: '', convertedAmount: '' };
+      return { ...state, convertedAmount: '' };
+    case 'REFRESH':
+      return {
+        ...state,
+        amount: '',
+        fromCurrency: 'USD',
+      };
     default:
       return state;
   }
 }
-
+const currencySymbols: { [key: string]: string } = {
+  EUR: '€',
+  USD: '$',
+  CAD: '$',
+  GBP: '£',
+  JPY: '¥',
+  AUD: '$',
+  NGN: '₦',
+};
 function CurrencyConverter() {
   const [
     { fromCurrency, toCurrency, amount, convertedAmount, exchangeRates, error },
@@ -82,9 +97,8 @@ function CurrencyConverter() {
 
   useEffect(() => {
     const handleConvert = () => {
-      console.log('Exchange Rates: ', exchangeRates);
       if (!amount) {
-        dispatch({ type: 'SET_CONVERTED_AMOUNT', payload: '' }); // Clear converted amount
+        dispatch({ type: 'SET_CONVERTED_AMOUNT', payload: '' });
         return;
       }
 
@@ -94,14 +108,15 @@ function CurrencyConverter() {
       }
 
       if (exchangeRates && amount) {
-        console.log('To Currency: ', toCurrency);
-        console.log('Amount: ', amount);
         const rate = exchangeRates[toCurrency];
-        console.log('Rate: ', rate);
 
         if (rate) {
           const result = (parseFloat(amount) * rate).toFixed(2);
-          dispatch({ type: 'SET_CONVERTED_AMOUNT', payload: result });
+          const symbol = currencySymbols[toCurrency] || '';
+          dispatch({
+            type: 'SET_CONVERTED_AMOUNT',
+            payload: `${symbol}${result}`,
+          });
         } else {
           dispatch({
             type: 'SET_ERROR',
@@ -113,66 +128,71 @@ function CurrencyConverter() {
     handleConvert();
   }, [amount, fromCurrency, toCurrency, exchangeRates, dispatch]);
   const handleDigitClick = (digit: string) => {
-    dispatch({ type: 'SET_AMOUNT', payload: amount + digit });
+    dispatch({
+      type: 'SET_AMOUNT',
+      payload: amount + digit,
+    });
   };
-  const handleDelete = () => {
-    dispatch({ type: 'DELETE' });
-  };
-  const handleClear = () => {
-    dispatch({ type: 'CLEAR' });
-  };
+
   return (
     <div className='converter'>
       <div className='converter-box'>
-        <select
-          value={fromCurrency}
-          onChange={(e) =>
-            dispatch({ type: 'SET_FROM_CURRENCY', payload: e.target.value })
-          }
-        >
-          {currencies.map((currency) => (
-            <option key={currency} value={currency}>
-              {currency}
-            </option>
-          ))}
-        </select>
-        <select
-          value={toCurrency}
-          onChange={(e) =>
-            dispatch({ type: 'SET_TO_CURRENCY', payload: e.target.value })
-          }
-        >
-          {currencies.map((currency) => (
-            <option key={currency} value={currency}>
-              {currency}
-            </option>
-          ))}
-        </select>
-        <div className='amount-input'>
-          <div className='amount-display'>
-            {amount}
-            {fromCurrency}
-          </div>
+        <div className='select-section'>
+          <select
+            value={fromCurrency}
+            onChange={(e) =>
+              dispatch({ type: 'SET_FROM_CURRENCY', payload: e.target.value })
+            }
+          >
+            {currencies.map((currency) => (
+              <option key={currency} value={currency}>
+                {currency}
+              </option>
+            ))}
+          </select>
+          <select
+            value={toCurrency}
+            onChange={(e) =>
+              dispatch({ type: 'SET_TO_CURRENCY', payload: e.target.value })
+            }
+          >
+            {currencies.map((currency) => (
+              <option key={currency} value={currency}>
+                {currency}
+              </option>
+            ))}
+          </select>
         </div>
-        <div className='converted-amount'>
+        <div className='amount-input'>
+          <section className='amount-display'>
+            {currencySymbols[fromCurrency] || ''}
+            {amount} {fromCurrency}
+          </section>
+        </div>
+        <section className='converted-amount'>
           {convertedAmount && (
             <p>
               {convertedAmount} {toCurrency}
             </p>
           )}
           {error && <p className='error'>{error}</p>}
-        </div>
+        </section>
       </div>
-      <div className='converter-grid'>
-        <span className='span-two'>
-          <Button style={colorstyle} onClick={() => {}}>
-            <span>&#8634;</span>
-          </Button>
-        </span>
-        <Button style={colorstyle} onClick={handleClear}>
-          C
+      <div className='clear-and-refresh'>
+        <Button
+          style={colorstyle}
+          onClick={() => {
+            dispatch({ type: 'REFRESH' });
+          }}
+        >
+          <span>&#8634;</span>
         </Button>
 
+        <Button style={colorstyle} onClick={() => dispatch({ type: 'CLEAR' })}>
+          C
+        </Button>
+      </div>
+      <div className='converter-grid'>
         <Button onClick={() => handleDigitClick('1')}>1</Button>
         <Button onClick={() => handleDigitClick('2')}>2</Button>
         <Button onClick={() => handleDigitClick('3')}>3</Button>
@@ -187,7 +207,7 @@ function CurrencyConverter() {
 
         <Button onClick={() => handleDigitClick('.')}>.</Button>
         <Button onClick={() => handleDigitClick('0')}>0</Button>
-        <Button style={colorstyle} onClick={handleDelete}>
+        <Button style={colorstyle} onClick={() => dispatch({ type: 'DELETE' })}>
           <span> &#x2B8C;</span>
         </Button>
       </div>

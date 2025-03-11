@@ -7,7 +7,7 @@ type ButtonProps = {
 };
 const Button = ({ children, onClick, style }: ButtonProps) => {
   return (
-    <button style={style} onClick={onClick}>
+    <button className='rdt-btn' style={style} onClick={onClick}>
       {children}
     </button>
   );
