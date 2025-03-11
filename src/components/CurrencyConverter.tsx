@@ -19,7 +19,8 @@ type CurrencyAction =
   | { type: 'SET_CONVERTED_AMOUNT'; payload: string }
   | { type: 'SET_EXCHANGE_RATES'; payload: { [key: string]: number } }
   | { type: 'SET_ERROR'; payload: string }
-  | { type: 'CLEAR' };
+  | { type: 'CLEAR' }
+  | { type: 'DELETE' };
 const initialState: CurrencyState = {
   fromCurrency: 'USD',
   toCurrency: 'EUR',
@@ -45,6 +46,9 @@ function currencyReducer(
       return { ...state, exchangeRates: action.payload, error: null };
     case 'SET_ERROR':
       return { ...state, error: action.payload };
+    case 'DELETE':
+      if (state.amount === '') return state;
+      return { ...state, amount: state.amount.slice(0, -1) };
     case 'CLEAR':
       return { ...state, amount: '', convertedAmount: '' };
     default:
@@ -53,15 +57,11 @@ function currencyReducer(
 }
 
 function CurrencyConverter() {
-  const [state, dispatch] = useReducer(currencyReducer, initialState);
-  const {
-    fromCurrency,
-    toCurrency,
-    amount,
-    convertedAmount,
-    exchangeRates,
-    error,
-  } = state;
+  const [
+    { fromCurrency, toCurrency, amount, convertedAmount, exchangeRates, error },
+    dispatch,
+  ] = useReducer(currencyReducer, initialState);
+
   const [currencies, setCurrencies] = useState<string[]>([]);
   useEffect(() => {
     const fetchRates = async () => {
@@ -80,40 +80,44 @@ function CurrencyConverter() {
     fetchRates();
   }, []);
 
-  const handleConvert = () => {
-    console.log('Exchange Rates: ', exchangeRates);
-    if (!amount) {
-      dispatch({ type: 'SET_ERROR', payload: 'Please enter an amount.' });
-      return;
-    }
-
-    if (isNaN(parseFloat(amount))) {
-      dispatch({ type: 'SET_ERROR', payload: 'Invalid amount.' });
-      return;
-    }
-
-    if (exchangeRates && amount) {
-      console.log('To Currency: ', toCurrency);
-      console.log('Amount: ', amount);
-      const rate = exchangeRates[toCurrency];
-      console.log('Rate: ', rate);
-
-      if (rate) {
-        const result = (parseFloat(amount) * rate).toFixed(2);
-        dispatch({ type: 'SET_CONVERTED_AMOUNT', payload: result });
-      } else {
-        dispatch({
-          type: 'SET_ERROR',
-          payload: 'Currency conversion rate not found.',
-        });
+  useEffect(() => {
+    const handleConvert = () => {
+      console.log('Exchange Rates: ', exchangeRates);
+      if (!amount) {
+        dispatch({ type: 'SET_CONVERTED_AMOUNT', payload: '' }); // Clear converted amount
+        return;
       }
-    }
-  };
 
+      if (isNaN(parseFloat(amount))) {
+        dispatch({ type: 'SET_ERROR', payload: 'Invalid amount.' });
+        return;
+      }
+
+      if (exchangeRates && amount) {
+        console.log('To Currency: ', toCurrency);
+        console.log('Amount: ', amount);
+        const rate = exchangeRates[toCurrency];
+        console.log('Rate: ', rate);
+
+        if (rate) {
+          const result = (parseFloat(amount) * rate).toFixed(2);
+          dispatch({ type: 'SET_CONVERTED_AMOUNT', payload: result });
+        } else {
+          dispatch({
+            type: 'SET_ERROR',
+            payload: 'Currency conversion rate not found.',
+          });
+        }
+      }
+    };
+    handleConvert();
+  }, [amount, fromCurrency, toCurrency, exchangeRates, dispatch]);
   const handleDigitClick = (digit: string) => {
-    dispatch({ type: 'SET_AMOUNT', payload: state.amount + digit });
+    dispatch({ type: 'SET_AMOUNT', payload: amount + digit });
   };
-
+  const handleDelete = () => {
+    dispatch({ type: 'DELETE' });
+  };
   const handleClear = () => {
     dispatch({ type: 'CLEAR' });
   };
@@ -145,13 +149,10 @@ function CurrencyConverter() {
           ))}
         </select>
         <div className='amount-input'>
-          <input
-            type='text'
-            value={amount}
-            onChange={(e) =>
-              dispatch({ type: 'SET_AMOUNT', payload: e.target.value })
-            }
-          />
+          <div className='amount-display'>
+            {amount}
+            {fromCurrency}
+          </div>
         </div>
         <div className='converted-amount'>
           {convertedAmount && (
@@ -161,48 +162,35 @@ function CurrencyConverter() {
           )}
           {error && <p className='error'>{error}</p>}
         </div>
-        <Button style={colorstyle} onClick={handleConvert}>
-          Convert
-        </Button>
       </div>
-      <section>
-        <Button
-          style={colorstyle}
-          onClick={() => {
-            dispatch({ type: 'SET_EXCHANGE_RATES', payload: {} });
-          }}
-        >
-          his
-        </Button>
-        <Button style={colorstyle} onClick={() => {}}>
-          ref
-        </Button>
+      <div className='converter-grid'>
+        <span className='span-two'>
+          <Button style={colorstyle} onClick={() => {}}>
+            <span>&#8634;</span>
+          </Button>
+        </span>
         <Button style={colorstyle} onClick={handleClear}>
           C
         </Button>
-      </section>
-      <section>
+
         <Button onClick={() => handleDigitClick('1')}>1</Button>
         <Button onClick={() => handleDigitClick('2')}>2</Button>
         <Button onClick={() => handleDigitClick('3')}>3</Button>
-      </section>
-      <section>
+
         <Button onClick={() => handleDigitClick('4')}>4</Button>
         <Button onClick={() => handleDigitClick('5')}>5</Button>
         <Button onClick={() => handleDigitClick('6')}>6</Button>
-      </section>
-      <section>
+
         <Button onClick={() => handleDigitClick('7')}>7</Button>
         <Button onClick={() => handleDigitClick('8')}>8</Button>
         <Button onClick={() => handleDigitClick('9')}>9</Button>
-      </section>
-      <section>
+
         <Button onClick={() => handleDigitClick('.')}>.</Button>
         <Button onClick={() => handleDigitClick('0')}>0</Button>
-        <Button style={colorstyle} onClick={handleClear}>
-          c
+        <Button style={colorstyle} onClick={handleDelete}>
+          <span> &#x2B8C;</span>
         </Button>
-      </section>
+      </div>
     </div>
   );
 }

@@ -21,7 +21,8 @@ type ACTIONTYPE =
   | { type: 'choose-operation'; payload: string }
   | { type: 'clear' }
   | { type: 'delete-digit' }
-  | { type: 'evaluate' };
+  | { type: 'evaluate' }
+  | { type: 'percentage' };
 
 function reducer(state: OperationProps, action: ACTIONTYPE): OperationProps {
   switch (action.type) {
@@ -71,6 +72,20 @@ function reducer(state: OperationProps, action: ACTIONTYPE): OperationProps {
         operation: null,
         previousOperand: '',
       };
+    case 'percentage':
+      if (state.previousOperand && state.operation) {
+        const percentageValue = parseFloat(state.currentOperand) / 100;
+        return {
+          ...state,
+          currentOperand: percentageValue.toString(),
+        };
+      } else {
+        const percentageValue = parseFloat(state.currentOperand) / 100;
+        return {
+          ...state,
+          currentOperand: percentageValue.toString(),
+        };
+      }
     default:
       return state;
   }
@@ -98,6 +113,9 @@ function evaluate({
     case '/':
       computation = (prev / current).toString();
       break;
+    case '%':
+      computation = (current / 100).toString();
+      break;
     default:
       return '';
   }
@@ -118,42 +136,40 @@ function Calculator() {
           </div>
           <div className='current-operand'>{currentOperand}</div>
         </div>
-        <section className=''>
+        <section className='cal-operation-grid'>
           <Button onClick={() => dispatch({ type: 'clear' })}>C</Button>
-          <Button onClick={() => dispatch({ type: 'delete-digit' })}>
-            DEL
-          </Button>
-          <Button>+/-</Button>
-          <Button>%</Button>
-          <Button>i</Button>
-        </section>
-        <section>
+          <Button onClick={() => dispatch({ type: 'percentage' })}>%</Button>
+          <span className='span-two'>
+            <Button onClick={() => dispatch({ type: 'delete-digit' })}>
+              <span> &#x2B8C;</span>
+            </Button>
+          </span>
           <Button
             onClick={() => dispatch({ type: 'choose-operation', payload: '+' })}
             style={colorstyle}
           >
-            &#43;
+            <span className='entity'>&#43;</span>
           </Button>
           <Button
             onClick={() => dispatch({ type: 'choose-operation', payload: '-' })}
             style={colorstyle}
           >
-            &minus;
+            <span className='entity'>&minus;</span>
           </Button>
           <Button
             onClick={() => dispatch({ type: 'choose-operation', payload: '*' })}
             style={colorstyle}
           >
-            &#215;
+            <span className='entity'>&#215;</span>
           </Button>
           <Button
             onClick={() => dispatch({ type: 'choose-operation', payload: '/' })}
             style={colorstyle}
           >
-            &divide;
+            <span className='entity'>&divide;</span>
           </Button>
         </section>
-        <section>
+        <section className='cal-number-grid'>
           <Button onClick={() => dispatch({ type: 'add-digit', payload: '7' })}>
             7
           </Button>
@@ -163,8 +179,7 @@ function Calculator() {
           <Button onClick={() => dispatch({ type: 'add-digit', payload: '9' })}>
             9
           </Button>
-        </section>
-        <section>
+
           <Button onClick={() => dispatch({ type: 'add-digit', payload: '4' })}>
             4
           </Button>
@@ -174,8 +189,7 @@ function Calculator() {
           <Button onClick={() => dispatch({ type: 'add-digit', payload: '6' })}>
             6
           </Button>
-        </section>
-        <section>
+
           <Button onClick={() => dispatch({ type: 'add-digit', payload: '1' })}>
             1
           </Button>
@@ -185,8 +199,7 @@ function Calculator() {
           <Button onClick={() => dispatch({ type: 'add-digit', payload: '3' })}>
             3
           </Button>
-        </section>
-        <section>
+
           <Button onClick={() => dispatch({ type: 'add-digit', payload: '0' })}>
             0
           </Button>

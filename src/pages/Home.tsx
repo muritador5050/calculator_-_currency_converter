@@ -18,9 +18,9 @@ function Home() {
 
   let activeName =
     active === 'Calculator' ? (
-      <h1>Calculator</h1>
+      <p>Calculator</p>
     ) : active === 'Converter' ? (
-      <h1>Converter</h1>
+      <p>Converter</p>
     ) : (
       ''
     );
@@ -28,26 +28,26 @@ function Home() {
     backgroundColor: active === buttonId ? 'green' : 'black',
   });
   return (
-    <>
+    <div className='container'>
       <span className='active-name'>{activeName}</span>
       <nav>
         <button
           style={buttonStyle('Converter')}
           onClick={() => handleActive('Converter')}
-          className='switch-btn'
+          className='switch-btn con-btn'
         >
           Converter
         </button>
         <button
           style={buttonStyle('Calculator')}
           onClick={() => handleActive('Calculator')}
-          className='switch-btn'
+          className='switch-btn cal-btn'
         >
           Calculator
         </button>
       </nav>
       <main>{componentToRender}</main>
-    </>
+    </div>
   );
 }
 

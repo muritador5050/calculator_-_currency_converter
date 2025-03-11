@@ -3,7 +3,7 @@ import '../App.css';
 type ButtonProps = {
   children: React.ReactNode;
   style?: React.CSSProperties;
-  onClick?: () => void;
+  onClick: () => void;
 };
 const Button = ({ children, onClick, style }: ButtonProps) => {
   return (
